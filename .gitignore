@@ -1,0 +1,8 @@
+other
+_minted-rep
+*.aux
+*.fls
+*.fdb_latexmk
+*.log
+*.gz
+octave-workspace

@@ -1,0 +1,47 @@
+\documentclass[a4paper,12pt]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+
+\usepackage{amsmath} %математика
+
+\usepackage{tikz,pgfplots} %графики
+\pgfplotsset{compat=newest}
+
+\usepackage[left=3cm,right=2cm,top=2cm,bottom=2cm]{geometry} %формат страницы
+
+\usepackage{minted} %листинг
+
+
+\newcommand{\imgh}[2]{
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=1\textwidth]{#1}
+        \caption{#2}\label{fig:#1}
+    \end{figure}
+}
+
+\newcommand{\roots}[4]{
+    \begin{tikzpicture}
+        \begin{axis}[axis x line=center, axis y line=none, xmin=#1, xmax=#2, xlabel={$x$}]
+            \addplot[only marks] coordinates {#3};
+            \draw \foreach \p/\s in {#4}{(\p,0.15) node {\s}};
+        \end{axis}
+    \end{tikzpicture}
+}
+
+\newcommand{\eqcom}[1]{
+    \left|
+    \begin{array}{l} 
+        #1
+    \end{array}
+    \right.
+}
+
+\newcommand{\insertcode}[2]{
+    \inputminted[
+        frame=lines,
+        fontsize=\footnotesize,
+        linenos
+    ]{#2}{#1}
+}
