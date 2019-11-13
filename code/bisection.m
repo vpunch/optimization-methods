@@ -5,8 +5,8 @@
 
 % будет работать бесконечно, если на отрезке нет корня
 function [xroot, yroot, info] = bisection(f, a, b, e)
-    Ap = [a f(a)];
-    Bp = [b f(b)];
+    Ap = [a, f(a)];
+    Bp = [b, f(b)];
 
     [Ap, Bp, info] = bisection_step(f, Ap, Bp, e); 
 
@@ -16,10 +16,6 @@ function [xroot, yroot, info] = bisection(f, a, b, e)
 end
 
 function [Ap, Bp, info] = bisection_step(f, Ap, Bp, e)
-    if (abs(Bp(1) - Ap(1)) <= e)
-        return
-    end
-    
     c = (Ap(1) + Bp(1)) / 2;
     fc = f(c);
 
@@ -34,6 +30,10 @@ function [Ap, Bp, info] = bisection_step(f, Ap, Bp, e)
 
     info.nstep = 1;
     info.ncalc = 1;
+
+    if (abs(Bp(1) - Ap(1)) <= e)
+        return
+    end
 
     [Ap, Bp, info1] = bisection_step(f, Ap, Bp, e);
     

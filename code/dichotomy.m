@@ -11,7 +11,7 @@ function [xm, ym, info] = dichotomy(f, a, b, e)
     d = e; %rand() * 2 * e;
 
     while ((b - a) / 2 > e)
-        [x1 x2] = deal((a + b - d) / 2, (a + b + d) / 2);
+        [x1, x2] = deal((a + b - d) / 2, (a + b + d) / 2);
 
         if (f(x2) > f(x1))
             b = x2;

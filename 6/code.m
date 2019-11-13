@@ -31,25 +31,26 @@ X0 = [1 -2];
 [Xm ym] = fminunc(F, X0)
 plot3(Xm(2), Xm(1), ym, 'b.', 'MarkerSize', 40);
 
-gradparams = struct(
-    'h', 1);
-[Xm, ym, n, Approx] = graddesc(F, X0, 0.5, 'primal', gradparams)
+gradparams = struct('h', 1);
+[Xm, ym, info] = graddesc(F, X0, 0.5, 'primal', gradparams)
 plot3(Xm(2), Xm(1), ym, 'r.', 'MarkerSize', 40);
-plot3(Approx(:, 2), Approx(:, 1), Approx(:, 3), 'r', 'LineWidth', 3);
+plot3(info.Approx(:, 2), info.Approx(:, 1), info.Approx(:, 3), 'r', 'LineWidth', 3);
 
 
 % количество вычислений в зависимости от масштаба (шага)
 figure;
+
 H = linspace(0.05, 0.8, 6);
 for i = 1:length(H)
     subplot(2, 3, i);
     contour(XX1, XX2, YY, 20);
     hold on;
 
-    [Xm, ym, n, Approx] = graddesc(F, X0, 0.5, H(i));
+    gradparams = struct('h', H(i));
+    [Xm, ym, info] = graddesc(F, X0, 0.5, 'primal', gradparams);
     plot(Xm(2), Xm(1), 'r.', 'MarkerSize', 20);
-    plot(Approx(:, 2), Approx(:, 1), 'r', 'LineWidth', 3);
-    title(['Шаг ', num2str(H(i)), ', Вычислений ', num2str(n)]);
+    plot(info.Approx(:, 2), info.Approx(:, 1), 'r', 'LineWidth', 3);
+    title(['Масштаб ' num2str(H(i)) ', Шагов ' num2str(info.nstep) ', Вычислений ' num2str(info.ncalc)]);
 end
 
 

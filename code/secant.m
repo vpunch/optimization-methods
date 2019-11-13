@@ -9,7 +9,7 @@ function [xroot, yroot, info] = secant(f, a, b, e)
     Ap = [a, f(a)];
     Bp = [b, f(b)];
 
-    [d2, d2ncalc] = deriv2(f, Ap(1))
+    [d2, d2ncalc] = deriv2(f, Ap(1));
     if (d2 * Ap(2) < 0)
         X0p = Ap;
     else

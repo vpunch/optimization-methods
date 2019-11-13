@@ -1,13 +1,17 @@
-set(0, 'defaultaxesfontsize', 12) 
-set(0, 'defaulttextfontsize', 12)
+addpath('../code')
+
+set(0, 'defaultaxesfontsize', 14) 
+set(0, 'defaulttextfontsize', 14)
 
 
+% целевая функция
 global C = [3 3 1 -7 -7]
 global fu = @(x) C(1)*x(1)^2 - C(2)*x(1)*x(2) + C(3)*x(2)^2 - C(4)*x(1) + C(5)*x(2)
-
+% область определения
 X1 = X2 = linspace(-10, 10, 40)';
 [XX1, XX2] = meshgrid(X1, X2);
 
+% значения
 YY = [];
 for i = 1:length(X1)
     Y = [];
@@ -24,9 +28,10 @@ xlabel("x1");
 ylabel("x2");
 zlabel("y");
 
+
 % начальное приближение
 x0 = [1, -2];
-%[xmin ymin] = fminunc(f, x0)
+%[xmin, ymin] = fminunc(f, x0)
 
 function [f, g] = fwithgrad(x)
     global C;
@@ -40,7 +45,7 @@ function [f, g] = fwithgrad(x)
     end
 end
 options = optimset('GradObj', 'on');
-[xmin, ymin] = fminunc(@fwithgrad, x0, options)
+[xmin, ymin] = fminunc(@fwithgrad, x0, options);
 
 plot3(xmin(2), xmin(1), ymin, 'r.', 'MarkerSize', 40);
 

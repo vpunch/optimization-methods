@@ -4,21 +4,24 @@ set(0, 'defaultaxesfontsize', 14);
 set(0, 'defaulttextfontsize', 14);
 
 
-% исходные данные
+% целевая функция
 f = @(X) X.^4 + exp(-X)
+% область определения
 X = -1:0.01:1;
+% отрезок поиска
 [a b] = deal(-0.5, 1)
 e = 0.1
-
 
 % минимум
 [targetxm, targetym] = fminbnd(f, a, b)
 
-% работа алгоритмов
-Fm = {@dichotomy, @gold, @fibonacci};
+M = {@dichotomy, @gold, @fibonacci};
 Name = {'Дихотомии', 'Золотого сечения', 'Фибоначчи'};
 
-for i = 1:length(Fm)
+
+% поиск минимума
+
+for i = 1:length(M)
     subplot(1, 3, i);
 
     plot(X, f(X), 'Color', 'b');
@@ -29,8 +32,8 @@ for i = 1:length(Fm)
     plot(targetxm, targetym, 'bo', 'LineWidth', 3);
 
 
-    [xm, ym, info] = Fm{i}(f, a, b, e);
-    title([Name{i}, ', Шагов ', num2str(info.nstep), ', Вычислений ', num2str(info.ncalc)]);
+    [xm, ym, info] = M{i}(f, a, b, e);
+    title([Name{i} ', Шагов ' num2str(info.nstep) ', Вычислений ' num2str(info.ncalc)]);
 
     segment = plot([info.Approx(1, 1) info.Approx(1, 2)], [0 0], 'Color', 'r', 'LineWidth', 3);
     for j = 1:length(info.Approx) - 1
@@ -52,10 +55,10 @@ figure;
 hold on;
 
 E = linspace(0.0001, 0.2, 100);
-for i = 1:length(Fm)
+for i = 1:length(M)
     N = [];
     for e = E
-        [xm ym info] = Fm{i}(f, a, b, e);
+        [xm ym info] = M{i}(f, a, b, e);
         N = [N info.ncalc];
     end
     plot(E, N);
