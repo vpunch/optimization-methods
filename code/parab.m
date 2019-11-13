@@ -1,14 +1,20 @@
+% Copyright © 2019 Panchishin Ivan
+
 % метод парабол
+% parabola method
 
-function [xm, ym, n, Approx] = parab(f, a, b, e)
-    Approx = [];
+% Approx - позволяет восстановить параболу
 
+function [xm, ym, info] = parab(f, a, b, e)
     % точки пересечений
-    [x1 x3 n] = minloc(f, a, (b-a)/4); %или a b
-    x2 = x1 + (x3 - x1) * rand(); %(a + b) / 2
+    [x1, x3, mlncalc] = minloc(f, a, (b - a) / 4) %или a b
+    x2 = x1 + (x3 - x1) * rand() %(a + b) / 2
     
     [y1 y2 y3] = deal(f(x1), f(x2), f(x3));
-    n += 3; 
+
+    info.nstep = 0;
+    info.ncalc = 4 + mlncalc;
+    info.Approx = [];
     
     x42 = NaN;
     x41 = NaN;
@@ -17,25 +23,26 @@ function [xm, ym, n, Approx] = parab(f, a, b, e)
         a1 = (y2 - y1) / (x2 - x1);
         a2 = 1 / (x3 - x2) * ((y3 - y1) / (x3 - x1) - (y2 - y1) / (x2 - x1));
         
-        Approx = [Approx; [a0, a1, a2, x1, x2]];
+        ++info.nstep;
+        ++info.ncalc;
+        info.Approx = [info.Approx; [a0, a1, a2, x1, x2]];
         
         x42 = x41;
         % минимум параболы
         x41 = 1/2 * (x1 + x2 - a1/a2);
         
-        ++n;
         if (x41 > x2)
             [x1 y1] = deal(x2, y2);
             [x2 y2] = deal(x41, f(x41));
         else
             [x1 y1] = deal(x41, f(x41));
         end 
-        
+
         if (!isnan(x42) && abs(x41 - x42) <= e)
-            break;
+            break
         end 
     end 
     
     xm = x41;
-    ym = f(xm); ++n;
+    ym = f(xm);
 end

@@ -1,33 +1,43 @@
+% Copyright © 2019 Panchishin Ivan
+
 % метод Ньютона
-function [xroot yroot n] = newton(f, a, b, e)
-    Ap = [a f(a)];
-    Bp = [b f(b)];
-    n = 2;
+% Newton's method
+
+% Approx - позволяет восстановить касательную
+
+function [xroot, yroot, info] = newton(f, a, b, e)
+    Ap = [a, f(a)];
+    Bp = [b, f(b)];
     
-    d2 = der2(f, Ap(1));
-    if (d2 * Ap(2) > 0)
-        [Xp n] = newton_step(f, Ap, e, n);
+    [d2, d2ncalc] = deriv2(f, Ap(1));
+    if (d2 * Ap(2) < 0) % выбор начального приближения корня
+        X0p = Bp;
     else
-        [Xp n] = newton_step(f, Bp, e, n);
+        X0p = Ap;
     end 
-    
-    [xroot yroot] = deal(Xp(1), Xp(2));
+
+    [X1p, info] = newton_step(f, X0p, e);
+
+    info.ncalc += 2 + d2ncalc;
+    [xroot, yroot] = deal(X1p(1), X1p(2));
 end 
 
-function [Xp n] = newton_step(f, Xp, e, n)
-    d1 = der1(f, Xp(1), 0.001);
-    x = Xp(1) - Xp(2) / d1;
+function [X1p, info] = newton_step(f, X0p, e)
+    [d1, d1ncalc] = grad(f, X0p(1));
+    x1 = X0p(1) - X0p(2) / d1;
+    X1p = [x1, f(x1)];
+
+    info.nstep = 1;
+    info.ncalc = 1 + d1ncalc;
+    info.Approx = [X0p, d1];
     
-    if (abs(x - Xp(1)) <= e)
+    if (abs(X1p(1) - X0p(1)) <= e)
         return
     end 
-    
-    ftang = @(X) d1 * (X - Xp(1)) + Xp(2);
-    global X;
-    %plot(X, ftang(X));
-    
-    Xp = [x f(x)];
-    ++n; 
-    
-    [Xp n] = newton_step(f, Xp, e, n);
+
+    [X1p, info1] = newton_step(f, X1p, e);
+
+    info.nstep += info1.nstep;
+    info.ncalc += info1.ncalc;
+    info.Approx = [info.Approx; info1.Approx];
 end

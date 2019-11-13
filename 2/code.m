@@ -10,12 +10,12 @@ X = -1:0.01:1;
 [a b] = deal(-0.5, 1)
 e = 0.1
 
+
 % минимум
 [targetxm, targetym] = fminbnd(f, a, b)
 
-
 % работа алгоритмов
-Fm = {@dichotomy, @gold, @fib};
+Fm = {@dichotomy, @gold, @fibonacci};
 Name = {'Дихотомии', 'Золотого сечения', 'Фибоначчи'};
 
 for i = 1:length(Fm)
@@ -29,13 +29,13 @@ for i = 1:length(Fm)
     plot(targetxm, targetym, 'bo', 'LineWidth', 3);
 
 
-    [xm, ym, n, Approx] = Fm{i}(f, a, b, e)
-    title([Name{i}, ', n = ', num2str(n)]);
+    [xm, ym, info] = Fm{i}(f, a, b, e);
+    title([Name{i}, ', Шагов ', num2str(info.nstep), ', Вычислений ', num2str(info.ncalc)]);
 
-    segment = plot([Approx(1, 1) Approx(1, 2)], [0 0], 'Color', 'r', 'LineWidth', 3);
-    for j = 1:length(Approx) - 1
-        st = Approx(j, :);
-        en = Approx(j+1, :);
+    segment = plot([info.Approx(1, 1) info.Approx(1, 2)], [0 0], 'Color', 'r', 'LineWidth', 3);
+    for j = 1:length(info.Approx) - 1
+        st = info.Approx(j, :);
+        en = info.Approx(j+1, :);
         if st(1) != en(1) 
             shinkseg(st(1), en(1), segment, 1);
         end
@@ -51,12 +51,12 @@ end
 figure;
 hold on;
 
-E = linspace(0.0001, 0.5, 20);
+E = linspace(0.0001, 0.2, 100);
 for i = 1:length(Fm)
     N = [];
     for e = E
-        [xm ym n] = Fm{i}(f, a, b, e);
-        N = [N n];
+        [xm ym info] = Fm{i}(f, a, b, e);
+        N = [N info.ncalc];
     end
     plot(E, N);
 end

@@ -33,9 +33,9 @@ X0 = [1 -2];
 plot3(Xm(2), Xm(1), ym, 'b.', 'MarkerSize', 40);
 
 params = struct('a', -9, 'b', 9);
-[Xm, ym, n, Approx] = graddesc(F, X0, 0.1, 'coord', params)
+[Xm, ym, info] = graddesc(F, X0, 0.1, 'coord', params)
 plot3(Xm(2), Xm(1), ym, 'r.', 'MarkerSize', 40);
-plot3(Approx(:, 2), Approx(:, 1), Approx(:, 3), 'r', 'LineWidth', 3); 
+plot3(info.Approx(:, 2), info.Approx(:, 1), info.Approx(:, 3), 'r', 'LineWidth', 3); 
 
 
 pause

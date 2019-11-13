@@ -1,3 +1,5 @@
+% Copyright © 2019 Panchishin Ivan
+
 % анимация изменения отрезка
 
 function shinkseg(st, en, line, timeout)
