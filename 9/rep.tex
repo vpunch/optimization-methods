@@ -1,0 +1,267 @@
+% Copyright © 2019 Panchishin Ivan
+
+\input{../preamble}
+
+\begin{document}
+    
+\newcommand{\labn}{9}
+\input{../title}
+
+\subsection*{Цель}
+
+Изучить аналитические методы нахожения условного экстремума функции двух переменных.
+
+\subsection*{Задачи}
+
+\begin{enumerate}
+    \item Найти условные экстремумы при ограничениях типа равенств заданных функций.
+    \item Найти наибольшее и наименьшее значения заданных функций в замкнутой области.
+\end{enumerate}
+
+\subsection*{Ход работы}
+    \[
+    f(x) = f(x_1, x_2) = \frac{1}{x_1} + \frac{1}{x_2},\ x_1 + x_2 = 2
+    .\]
+
+    Графическое описание приведено на рисунке~\ref{fig:1task}. 
+    Его можно использовать для проверки ответа. 
+    Рисунок содержит графцик целевой функции и ее сечение (график функции по точкам на прямой уравнения связи), спроецированное на ось $x_1$, а также без проекции.
+    Чтобы избежать проекции сечения на ось $x_1$, координаты $x_1$ разделил на косинус угла наклона прямой.
+    \imgh{1task}{Пример 1}
+
+    Решим пример, выразив один из аргументов из уравнения связи:
+    \begin{flalign*}
+        &x_2 = 2 - x_1 \implies f(x) = \frac{1}{x_1} + \frac{1}{2 - x_1} = \frac{2 - x_1 + x_1}{x_1(2 - x_1)} = \frac{2}{2x_1 - x_1^{2}}&
+    \end{flalign*}
+    Геометрически мы перешли к поиску экстремума на сечении функции плоскостью, которую образует уравнение связи.
+    Сечение проецируется на ось $x_1$ как показано на рисунке~\ref{fig:1x1section}.
+    \imgh{1x1section}{Выраженная функция}
+
+    Найдем стационарные точки:
+    \begin{flalign*}
+        f'(x) &= \frac{-(2 - 2x_1)2}{(2x_1 - x_1^{2})^{2}} = - \frac{4(1 - x_1)}{(2x_1 - x_1^{2})^{2}}&\\
+        1 - x_1 &= 0 \implies x_1^{*} = 1&
+        \intertext{Проверим достаточное условие наличия экстремума:}
+        f''(x) &= -4(\frac{-1(2x_1 - x_1^{2})^{2} - (1 - x_1)(2 - 2x_1)2(2x_1 - x_1^{2})}{(2x_1 - x_1^{2})^{4}})&\\
+        &= \frac{4}{(2x_1 - x_1^{2})^{2}} + \frac{4((1 - x_1)(2 - 2x_1)2)}{(2x_1 - x_1^{2})^{3}} = \frac{4}{(2x_1 - x_1^{2})^{2}} + \frac{16(1 - x_1)^{2}}{(2x_1 - x_1^{2})^{3}}&\\
+        f''(1) &> 0 \implies min&\\
+        x_2^{*} &= 2 - 1 = 1&
+    \end{flalign*}
+
+    Ответ: $f(1, 1) = 2$ --- экстремум минимума при заданном условии.
+
+    Исходный код на языке \textit{Octave} для построения графиков представлен в листинге ниже:
+    \insertcode{code.m}{octave}
+
+    Визуализация, по которой писался код, приведена на рисунке~\ref{fig:1draft}.
+    \imgh{1draft}{Черновик}
+
+    \[
+        f(x_1, x_2) = 25x_1x_2^{2},\ x_1 - 10x_2 = 1 
+    .\] 
+
+    Графическое описание примера приведено на рисунке~\ref{fig:2task}.
+    \imgh{2task}{Пример 2}
+
+    Решим задачу с помощью функции Лагранжа:
+    \begin{flalign*}
+        &L = f(x_1, x_2) + \lambda\phi(x_1, x_2) = 25x_1x_2^{2} + \lambda(x_1 - 10x_2 - 1),&
+    \end{flalign*}
+    где $\phi(x_1, x_2)$ --- уравнение связи, равное нулю, $\lambda$ --- множитель Лагранжа.
+
+    Найдем частные производные ($\lambda = const$):
+    \begin{flalign*}
+        &L'_{x_1} = 25x_2^{2} + \lambda&\\
+        &L'_{x_2} = 50x_1x_2 - 10\lambda&
+        \intertext{Решим систему относительно $x_1$, $x_2$ и $\lambda$:}
+        &\begin{cases}
+            L'_{x_1} = 0\\
+            L'_{x_2} = 0\\
+            \phi(x_1, x_2) = 0
+        \end{cases} \implies
+        \begin{cases}
+            25x_2^{2} + \lambda = 0\\
+            5x_1x_2 - \lambda = 0\\
+            x_1 - 10x_2 - 1 = 0
+        \end{cases} \implies
+        \begin{cases}
+            \lambda = -25x_2^{2}\\
+            5x_1x_2 + 25x_2^{2} = 0\\
+            x_1 = 1 + 10x_2
+        \end{cases}\\
+        &5(1 + 10x_2)x_2 + 25x_2^{2} = 5x_2((1 + 10x_2) + 5x_2) = 0&\\
+        &\begin{cases}
+            x_2 = 0\\
+            1 + 10x_2 + 5x_2 = 1 + 15x_2 = 0
+        \end{cases} \implies
+        \begin{cases}
+            x_{21} = 0\\
+            x_{22} = -\frac{1}{15}
+        \end{cases}\\
+        &x_{11} = 1&\\
+        &x_{12} = 1 - \frac{10}{15} = \frac{1}{3}\\
+        &\lambda_1 = 0&\\
+        &\lambda_2 = \frac{-25}{225} = -\frac{1}{9}
+    \end{flalign*}
+
+    Для проверки достаточного условия, воспользуемся вторым дифференциалом функции Лагранжа:
+    \begin{flalign*}
+        &d^{2}L = L''_{x_1x_1}(dx_1)^{2} + 2L''_{x_1x_2}(dx_1dx_2) + L''_{x_2x_2}(dx_2)^{2}&\\
+        &L''_{x_1x_1} = 0, L''_{x_1x_2} = 50x_2, L''_{x_2x_2} = 50x_1&\\
+        &d^{2}L = 100x_2dx_1dx_2 + 50x_1(dx_2)^{2}&\\
+        \intertext{Рассмотрим точку $(1, 0)$:}
+        &d_1^{2}L = 50(dx_2)^{2} > 0&\\
+        \intertext{Рассмотрим точку $(\frac{1}{3}, -\frac{1}{15})$:}
+        &d_2^{2}L = -\frac{20}{3}dx_1dx_2 + \frac{50}{3}(dx_2)^{2}&
+        \intertext{Так как дифференциалы знакопеременные, сравнение с нулем не очевидно --- выразим один из дифференциалов из уравнения связи:}
+        &d(x_1 - 10x_2) = d(1)&\\
+        &dx_1 - 10dx_2 = 0&\\
+        &dx_1 = 10dx_2&\\
+        &\frac{-20}{3}10(dx_2)^{2} + \frac{50}{3}(dx_2)^{2} = - \frac{150}{3}(dx_2)^{2} < 0&
+    \end{flalign*}
+
+    Ответ: $f(1, 0) = 0$ --- минимум, $f(\frac{1}{3}, -\frac{1}{15}) \approx 0,04$ --- максимум. 
+
+    \[
+        f(x_1, x_2) = 2x_1 + 3x_2,\ x_1^{2} + x_2^{2} = 1
+    .\]
+
+    Графическое описание примера приведено на рисунке~\ref{fig:3task}.
+    \imgh{3task}{Пример 3}
+
+    \begin{flalign*}
+        &L = 2x_1 + 3x_2 + \lambda(x_1^{2} + x_2^{2} - 1)&\\
+        &L'_{x_1} = 2 + 2\lambda x_1&\\
+        &L'_{x_2} = 3 + 2\lambda x_2&\\
+        &\begin{cases}
+            2 + 2\lambda x_1 = 0\\
+            3 + 2\lambda x_2 = 0\\
+            x_1^{2} + x_2^{2} - 1 = 0
+        \end{cases} \implies
+        \begin{cases}
+            x_1 = - \frac{2}{2\lambda} = - \frac{1}{\lambda}\\
+            x_2 = - \frac{3}{2\lambda}\\
+            \frac{1}{\lambda^{2}} + \frac{9}{4\lambda^{2}} - 1 = 0
+        \end{cases}\\
+        &\frac{4 + 9 - 4\lambda^{2}}{4\lambda^{2}} = 0&\\
+        &\lambda^{2} = \frac{13}{4} \implies \lambda_{1,2} = \pm \frac{\sqrt{13}}{2}&\\
+        &x_{11} = - \frac{2}{\sqrt{13}}&\\
+        &x_{12} = \frac{2}{\sqrt{13}}&\\
+        &x_{21} = - \frac{3 \cdot 2}{2 \cdot \sqrt{13}} = - \frac{3}{\sqrt{13}}&\\
+        &x_{22} = \frac{3}{2} \cdot \frac{2}{\sqrt{13}} = \frac{3}{\sqrt{13}}&
+        \intertext{Рассмотрим достаточное условие существования экстремума в матичной форме в найденных точках:}
+        &A = 
+        \begin{bmatrix}
+            0 & \phi'_{x_1} & \phi'_{x_2}\\
+            \phi'_{x_1} & L''_{x_1x_1} & L''_{x_1x_2}\\
+            \phi'_{x_2} & L''_{x_2x_1} & L''_{x_2x_2}
+        \end{bmatrix} = 
+        \begin{bmatrix}
+            0 & 2x_1 & 2x_2\\
+            2x_1 & 2\lambda & 0\\
+            2x_2 & 0 & 2\lambda
+        \end{bmatrix}\\
+        &A_1 =
+        \begin{bmatrix}
+            0 & -\frac{4}{\sqrt{13}} & -\frac{6}{\sqrt{13}}\\
+            -\frac{4}{\sqrt{13}} & \sqrt{13} & 0\\
+            -\frac{6}{\sqrt{13}} & 0 & \sqrt{13}
+        \end{bmatrix}\\
+        &\Delta_1 = \sum\limits_{j=1}^{3}(-1)^{1+j}M_{1j}a_{1j} = \frac{4}{\sqrt{13}}(-4) - \frac{6}{\sqrt{13}}(6) < 0&\\
+        &A_2 =
+        \begin{bmatrix}
+            0 & \frac{4}{\sqrt{13}} & \frac{6}{\sqrt{13}}\\
+            \frac{4}{\sqrt{13}} & -\sqrt{13} & 0\\
+            \frac{6}{\sqrt{13}} & 0 & -\sqrt{13}
+        \end{bmatrix}\\
+        &\Delta_2 = -\frac{4}{\sqrt{13}}(-4) + \frac{6}{\sqrt{13}}(6) > 0&
+    \end{flalign*}
+    Ответ: $f(-\frac{2}{\sqrt{13}}, -\frac{3}{\sqrt{13}}) \approx -3,6$ --- минимум, $f(\frac{2}{\sqrt{13}}, \frac{3}{\sqrt{13}}) \approx 3,6$ --- максимум.
+
+    \[
+        y = f(x_1, x_2) = x_1^2 + x_2^2 - x_1x_2 - x_1 - x_2,\ X: x_1 \geq 0, x_2 \geq 0, x_1 + x_2 \leq 3
+    .\] 
+
+    Графическое описание примера приведено на рисунке~\ref{fig:4task}.
+    \imgh{4task}{Пример 4}
+
+    \begin{tikzpicture}
+        \begin{axis}[
+            axis x line=center,
+            axis y line=center,
+            xmin=-1, xmax=4,
+            xlabel={$x_1$},
+            ylabel={$x_2$},
+            samples at={-1,-0.9,...,4}
+        ]
+            \addplot[red, smooth]{3 - x};
+            \draw[red] (0,0) -- (0,4);
+            \draw[red] (0,0) -- (4,0);
+
+            \fill[red,opacity=0.2] (0,0) -- (0,3) -- (3,0);
+
+            \filldraw (1,1) circle (2pt) node[above left] {$M_1$};
+            \filldraw (0,0.5) circle (2pt) node[above left] {$M_2$};
+            \filldraw (0,0) circle (2pt) node[above left] {$M_3$};
+            \filldraw (0,3) circle (2pt) node[above right] {$M_4$};
+            \filldraw (0.5,0) circle (2pt) node[above] {$M_5$};
+            \filldraw (3,0) circle (2pt) node[above] {$M_6$};
+            \filldraw (1.5,1.5) circle (2pt) node[above right] {$M_7$};
+        \end{axis}
+    \end{tikzpicture}
+
+    Найдем стационарные точки $M$ внутри $X$:
+    \begin{flalign*}
+        &y'_{x_1} = 2x_1 - x_2 - 1&\\
+        &y'_{x_2} = 2x_2 - x_1 - 1&\\
+        &\begin{cases}
+            2x_1 - x_2 - 1 = 0\\
+            2x_2 - x_1 - 1 = 0
+        \end{cases} \implies
+        \begin{cases}
+            x_2 = 2x_1 - 1\\
+            4x_1 - 2 - x_1 - 1 = 0
+        \end{cases} \implies
+        \begin{cases}
+            x_2 = 1\\
+            x_1 = 1
+        \end{cases}\\
+        &M_1(1, 1),\ \mathbf{f(M_1) = -1}&
+    \end{flalign*}
+
+    Исследуем границу области:
+    \begin{flalign*}
+        &\begin{cases}
+            x_1 = 0\\
+            y = x_1^2 + x_2^2 - x_1x_2 - x_1 - x_2
+        \end{cases} \implies y = x_2^2 - x_2\\
+        &y' = 2x_2 - 1 = 0 \implies x_2 = \frac{1}{2}&\\
+        &M_2(0, \frac{1}{2}),\ \mathbf{f(M_2) = \frac{1}{4} - \frac{1}{2} = - \frac{1}{4}}&\\
+        &M_3(0, 0),\ \mathbf{f(M_3) = 0}&\\
+        &M_4(0, 3),\ \mathbf{f(M_4) = 6}&\\
+        \\
+        &\begin{cases}
+            x_2 = 0\\
+            y = x_1^2 + x_2^2 - x_1x_2 -x_1 - x_2
+        \end{cases} \implies y = x_1^2 - x_2\\
+        &f' = 2x_1 - 1 = 0 \implies x_1 = \frac{1}{2}&\\
+        &M_5(\frac{1}{2}, 0),\ \mathbf{f(M_5) = - \frac{1}{4}}&\\
+        &M_6(3, 0),\ \mathbf{f(M_6) = - 6}&\\
+        \\
+        &\begin{cases}
+            x_2 = 3 - x_1\\
+            y = x_1^2 + x_2^2 - x_1x_2 - x_1 - x_2
+        \end{cases} \implies y = x_1^2 + (3 - x_1)^2 - x_1(3 - x_1) - x_1 - (3 - x_1) =\\
+        &= x_1^2 + 9 - 6x_1 + x_1^2 - 3x_1 + x_1^2 - x_1 - 3 + x_1 = 3x_1^2 - 9x_1 + 6&\\
+        &f' = 6x_1 - 9 = 0 \implies x_1 = \frac{9}{6} = \frac{3}{2},\ x_2 = 1,5&\\
+        &M_7(\frac{3}{2}, \frac{3}{2}),\ \mathbf{f(M_7) = \frac{9}{4} + \frac{9}{4} - \frac{9}{4} - \frac{3}{2} - \frac{3}{2} = \frac{9}{4} - \frac{6}{2} = - \frac{3}{4}}&
+    \end{flalign*}
+
+    Ответ: $\underset{X}{max}y = f(3; 0) \cup f(0; 3) = 6$, $\underset{X}{min}y = f(1; 1) = -1$.
+
+\subsection*{Вывод}
+
+Изучил аналитические методы нахожения условного экстремума функции двух переменных, написал
+программную реализацию вывода графиков и их сечений.
+
+\end{document}
